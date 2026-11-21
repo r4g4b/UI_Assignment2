@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="battery">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catalogue - Student Laptop Finder</title>
+    <link rel="stylesheet" href="dist/output.css" />
+    <script type="module" src="src/js/catalogue.js"></script>
+  </head>
+  <body>
+    <header class="sticky top-0 z-20 border-b border-line bg-panel">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+        <a href="index.html" class="text-lg font-bold text-brand">Laptop Finder</a>
+
+        <button
+          id="navToggle"
+          type="button"
+          class="btn-quiet md:hidden"
+          aria-controls="mainNav"
+          aria-expanded="false"
+        >
+          Menu
+        </button>
+
+        <nav
+          id="mainNav"
+          class="hidden w-full flex-col gap-2 border-t border-line pt-3 text-sm font-semibold md:flex md:w-auto md:flex-row md:items-center md:gap-5 md:border-0 md:pt-0"
+        >
+          <a href="index.html" class="py-1 transition hover:text-brand">Home</a>
+          <a href="laptops.html" class="py-1 text-brand">Catalogue</a>
+          <a href="favorites.html" class="py-1 transition hover:text-brand">
+            Favorites (<span id="favCount">0</span>)
+          </a>
+          <a href="compare.html" class="py-1 transition hover:text-brand">Compare</a>
+          <button id="themeButton" type="button" class="btn-action">Performance Mode</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-4 py-8">
+      <h1 class="text-3xl font-bold">Laptop catalogue</h1>
+
+      <section class="mt-6 rounded-xl border border-line bg-panel p-4 md:p-6">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div>
+            <label for="searchInput" class="mb-1 block text-sm font-semibold">Search</label>
+            <input
+              id="searchInput"
+              type="search"
+              class="field"
+              placeholder="Search by name or brand"
+            />
+          </div>
+
+          <div>
+            <label for="categoryFilter" class="mb-1 block text-sm font-semibold">Category</label>
+            <select id="categoryFilter" class="field">
+              <option value="all">All categories</option>
+              <option value="ultrabook">Ultrabook</option>
+              <option value="gaming">Gaming</option>
+              <option value="2-in-1">2-in-1</option>
+              <option value="creator">Creator</option>
+              <option value="budget">Budget</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="maxPriceFilter" class="mb-1 block text-sm font-semibold">
+              Maximum price: <span id="maxPriceLabel">$2000</span>
+            </label>
+            <input
+              id="maxPriceFilter"
+              type="range"
+              min="400"
+              max="2000"
+              step="50"
+              value="2000"
+              class="w-full accent-brand"
+            />
+          </div>
+
+          <div>
+            <label for="ramFilter" class="mb-1 block text-sm font-semibold">Minimum RAM</label>
+            <select id="ramFilter" class="field">
+              <option value="0">Any RAM</option>
+              <option value="8">8 GB or more</option>
+              <option value="16">16 GB or more</option>
+              <option value="32">32 GB or more</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="sortFilter" class="mb-1 block text-sm font-semibold">Sort by</label>
+            <select id="sortFilter" class="field">
+              <option value="price-asc">Price: low to high</option>
+              <option value="price-desc">Price: high to low</option>
+              <option value="battery-desc">Battery: high to low</option>
+              <option value="battery-asc">Battery: low to high</option>
+              <option value="weight-asc">Weight: light to heavy</option>
+              <option value="weight-desc">Weight: heavy to light</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <p id="resultCount" class="text-sm font-semibold text-muted"></p>
+        <a href="favorites.html" class="text-sm font-semibold text-brand hover:underline">
+          View favorites
+        </a>
+      </div>
+
+      <div id="laptopGrid" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </main>
+
+    <footer class="mt-12 border-t border-line bg-panel">
+      <div class="mx-auto max-w-6xl px-4 py-6 text-sm text-muted">
+        <p>Student Laptop Finder - SW302 User Interface Development, Assignment 2.</p>
+      </div>
+    </footer>
+  </body>
+</html>
