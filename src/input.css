@@ -1,0 +1,63 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+
+@theme inline {
+  --color-page: var(--page);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-on-brand: var(--on-brand);
+}
+
+@layer base {
+  :root {
+    --page: #f4f4f5;
+    --panel: #ffffff;
+    --ink: #111111;
+    --muted: #525252;
+    --line: #d4d4d4;
+    --brand: #171717;
+    --brand-soft: #e5e5e5;
+    --on-brand: #ffffff;
+  }
+
+  html[data-theme="performance"] {
+    --page: #0a0a0a;
+    --panel: #171717;
+    --ink: #f5f5f5;
+    --muted: #a3a3a3;
+    --line: #2e2e2e;
+    --brand: #f5f5f5;
+    --brand-soft: #262626;
+    --on-brand: #0a0a0a;
+  }
+
+  body {
+    @apply bg-page text-ink;
+  }
+}
+
+@layer components {
+  .laptop-card {
+    @apply rounded-xl border border-line bg-panel p-4 transition duration-200 hover:-translate-y-1 hover:border-brand hover:shadow-lg focus-within:border-brand;
+  }
+
+  .btn-action {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-on-brand transition hover:opacity-85 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2 focus:ring-offset-page;
+  }
+
+  .btn-quiet {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-lg border border-line bg-panel px-4 py-2 text-sm font-semibold text-ink transition hover:border-brand hover:text-brand focus:outline-none focus:ring-2 focus:ring-brand;
+  }
+
+  .field {
+    @apply w-full rounded-lg border border-line bg-panel px-3 py-2 text-sm text-ink placeholder:text-muted focus:border-brand focus:ring-brand;
+  }
+
+  .stat-card {
+    @apply rounded-xl border border-line bg-panel p-4 text-center;
+  }
+}
