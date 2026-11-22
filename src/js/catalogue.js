@@ -1,6 +1,3 @@
-import { loadLaptops } from "./api.js";
-import { startPage, createCard, setupFavoriteButtons, showSkeleton, showMessage } from "./ui.js";
-
 startPage();
 
 const grid = document.getElementById("laptopGrid");
@@ -12,19 +9,9 @@ const maxPriceLabel = document.getElementById("maxPriceLabel");
 const ramFilter = document.getElementById("ramFilter");
 const sortFilter = document.getElementById("sortFilter");
 
-let allLaptops = [];
+const allLaptops = loadLaptops();
 
-showSkeleton(grid, 6);
-
-async function start() {
-  try {
-    allLaptops = await loadLaptops();
-    renderLaptops();
-  } catch (error) {
-    resultCount.textContent = "";
-    showMessage(grid, error.message);
-  }
-}
+renderLaptops();
 
 function renderLaptops() {
   const text = searchInput.value.toLowerCase().trim();
@@ -32,35 +19,19 @@ function renderLaptops() {
   const maxPrice = Number(maxPriceFilter.value);
   const minRam = Number(ramFilter.value);
 
-  let laptops = allLaptops.filter((laptop) => {
+  let laptops = allLaptops.filter(function (laptop) {
     const matchesText =
       laptop.name.toLowerCase().includes(text) || laptop.brand.toLowerCase().includes(text);
-    const matchesCategory = category === "all" || laptop.category === category;
-    const matchesPrice = laptop.price <= maxPrice;
-    const matchesRam = laptop.ramGB >= minRam;
 
-    return matchesText && matchesCategory && matchesPrice && matchesRam;
+    return (
+      matchesText &&
+      (category === "all" || laptop.category === category) &&
+      laptop.price <= maxPrice &&
+      laptop.ramGB >= minRam
+    );
   });
 
-  laptops = laptops.slice().sort((a, b) => {
-    if (sortFilter.value === "price-asc") {
-      return a.price - b.price;
-    }
-    if (sortFilter.value === "price-desc") {
-      return b.price - a.price;
-    }
-    if (sortFilter.value === "battery-desc") {
-      return b.batteryHours - a.batteryHours;
-    }
-    if (sortFilter.value === "battery-asc") {
-      return a.batteryHours - b.batteryHours;
-    }
-    if (sortFilter.value === "weight-asc") {
-      return a.weightKg - b.weightKg;
-    }
-    return b.weightKg - a.weightKg;
-  });
-
+  laptops = sortLaptops(laptops);
   resultCount.textContent = laptops.length + " laptops found";
 
   if (laptops.length === 0) {
@@ -68,8 +39,36 @@ function renderLaptops() {
     return;
   }
 
-  grid.innerHTML = laptops.map((laptop) => createCard(laptop)).join("");
+  grid.innerHTML = laptops.map(createCard).join("");
   setupFavoriteButtons(grid);
+}
+
+function sortLaptops(list) {
+  return list.slice().sort(function (a, b) {
+    const sort = sortFilter.value;
+
+    if (sort === "price-asc") {
+      return a.price - b.price;
+    }
+
+    if (sort === "price-desc") {
+      return b.price - a.price;
+    }
+
+    if (sort === "battery-desc") {
+      return b.batteryHours - a.batteryHours;
+    }
+
+    if (sort === "battery-asc") {
+      return a.batteryHours - b.batteryHours;
+    }
+
+    if (sort === "weight-asc") {
+      return a.weightKg - b.weightKg;
+    }
+
+    return b.weightKg - a.weightKg;
+  });
 }
 
 searchInput.addEventListener("input", renderLaptops);
@@ -77,9 +76,7 @@ categoryFilter.addEventListener("change", renderLaptops);
 ramFilter.addEventListener("change", renderLaptops);
 sortFilter.addEventListener("change", renderLaptops);
 
-maxPriceFilter.addEventListener("input", () => {
+maxPriceFilter.addEventListener("input", function () {
   maxPriceLabel.textContent = "$" + maxPriceFilter.value;
   renderLaptops();
 });
-
-start();

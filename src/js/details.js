@@ -1,58 +1,55 @@
-import { loadLaptops, findLaptopById } from "./api.js";
-import { isFavorite, toggleFavorite, toggleCompare } from "./storage.js";
-import { startPage, showSkeleton, showMessage, formatPrice, updateFavoriteCount } from "./ui.js";
-
 startPage();
 
-const params = new URLSearchParams(window.location.search);
-const laptopId = params.get("id");
+const laptopId = new URLSearchParams(window.location.search).get("id");
 const details = document.getElementById("details");
+const laptop = findLaptopById(loadLaptops(), laptopId);
 
-showSkeleton(details, 1);
-
-async function start() {
-  try {
-    const laptops = await loadLaptops();
-    const laptop = findLaptopById(laptops, laptopId);
-
-    if (laptop === undefined) {
-      showMessage(details, "We could not find that laptop. Please return to the catalogue and pick one.");
-      return;
-    }
-
-    showLaptop(laptop);
-  } catch (error) {
-    showMessage(details, error.message);
-  }
+if (laptop === undefined) {
+  showMessage(
+    details,
+    "We could not find that laptop. Please return to the catalogue and pick one."
+  );
+} else {
+  showLaptop(laptop);
 }
 
-function showLaptop(laptop) {
-  const saved = isFavorite(laptop.id);
+function showLaptop(item) {
+  const saved = isFavorite(item.id);
 
   details.innerHTML = `
-    <div class="grid gap-6 md:grid-cols-2">
-      <img src="${laptop.image}" alt="${laptop.name}" class="h-64 w-full rounded-xl object-cover md:h-full" />
-      <div>
-        <p class="text-sm font-bold uppercase tracking-wide text-muted">${laptop.brand}</p>
-        <h1 class="mt-1 text-3xl font-bold">${laptop.name}</h1>
-        <p class="mt-3 text-3xl font-bold text-brand">${formatPrice(laptop.price)}</p>
-        <p class="mt-4 text-muted">${laptop.description}</p>
-        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-          <button id="favoriteButton" type="button" class="btn-action" aria-pressed="${saved}">
-            ${saved ? "Remove favorite" : "Add to favorite"}
+    <div class="grid gap-6 lg:grid-cols-2">
+      <div class="panel">
+        <img src="${item.image}" alt="${item.name}" class="detail-image" />
+      </div>
+
+      <div class="panel">
+        <p class="eyebrow">${item.brand} / ${item.category}</p>
+        <h1 class="mt-2 text-3xl font-bold md:text-4xl">${item.name}</h1>
+        <p class="mt-3 text-3xl font-bold">${formatPrice(item.price)}</p>
+        <p class="mt-4 text-muted">${item.description}</p>
+
+        <div class="mt-6 flex flex-col gap-2 sm:flex-row">
+          <button
+            id="favoriteButton"
+            type="button"
+            class="btn-action"
+            aria-pressed="${saved}"
+          >${saved ? "Remove favorite" : "Add to favorite"}</button>
+          <button id="compareButton" type="button" class="btn-quiet">
+            Add to comparison
           </button>
-          <button id="compareButton" type="button" class="btn-quiet">Add to comparison</button>
         </div>
-        <p id="detailsMessage" class="mt-3 text-sm font-semibold text-brand"></p>
+
+        <p id="detailsMessage" class="mt-3 text-sm font-semibold"></p>
       </div>
     </div>
 
     <section class="mt-8">
-      <h2 class="text-xl font-bold">Full specifications</h2>
-      <div class="mt-3 overflow-x-auto rounded-xl border border-line">
-        <table class="w-full text-left text-sm">
-          <tbody class="divide-y divide-line">
-            ${createSpecRows(laptop)}
+      <h2 class="section-title">Full specifications</h2>
+      <div class="mt-3 overflow-x-auto rounded-xl border border-line bg-panel">
+        <table class="spec-table">
+          <tbody>
+            ${createSpecRows(item)}
           </tbody>
         </table>
       </div>
@@ -63,28 +60,29 @@ function showLaptop(laptop) {
   const compareButton = document.getElementById("compareButton");
   const message = document.getElementById("detailsMessage");
 
-  favoriteButton.addEventListener("click", () => {
-    const favorites = toggleFavorite(laptop.id);
-    const nowSaved = favorites.includes(laptop.id);
+  favoriteButton.addEventListener("click", function () {
+    const favorites = toggleFavorite(item.id);
+    const nowSaved = favorites.includes(item.id);
 
     favoriteButton.textContent = nowSaved ? "Remove favorite" : "Add to favorite";
     favoriteButton.setAttribute("aria-pressed", nowSaved);
     updateFavoriteCount();
   });
 
-  compareButton.addEventListener("click", () => {
-    if (!isFavorite(laptop.id)) {
-      toggleFavorite(laptop.id);
+  compareButton.addEventListener("click", function () {
+    // Comparing only works with favorites, so save the laptop first.
+    if (!isFavorite(item.id)) {
+      toggleFavorite(item.id);
       favoriteButton.textContent = "Remove favorite";
       favoriteButton.setAttribute("aria-pressed", "true");
       updateFavoriteCount();
     }
 
-    const result = toggleCompare(laptop.id);
+    const result = toggleCompare(item.id);
 
     if (result.message !== "") {
       message.textContent = result.message;
-    } else if (result.ids.includes(laptop.id)) {
+    } else if (result.ids.includes(item.id)) {
       message.textContent = "Added to the comparison list.";
     } else {
       message.textContent = "Removed from the comparison list.";
@@ -92,31 +90,29 @@ function showLaptop(laptop) {
   });
 }
 
-function createSpecRows(laptop) {
+function createSpecRows(item) {
   const rows = [
-    ["Name", laptop.name],
-    ["Brand", laptop.brand],
-    ["Price", formatPrice(laptop.price)],
-    ["Category", laptop.category],
-    ["CPU", laptop.cpu],
-    ["RAM", laptop.ramGB + " GB"],
-    ["Storage", laptop.storageGB + " GB"],
-    ["Battery life", laptop.batteryHours + " hours"],
-    ["Weight", laptop.weightKg + " kg"],
-    ["Screen", laptop.screenInches + " inches"],
-    ["Laptop ID", laptop.id]
+    ["Name", item.name],
+    ["Brand", item.brand],
+    ["Price", formatPrice(item.price)],
+    ["Category", item.category],
+    ["CPU", item.cpu],
+    ["RAM", item.ramGB + " GB"],
+    ["Storage", item.storageGB + " GB"],
+    ["Battery life", item.batteryHours + " hours"],
+    ["Weight", item.weightKg + " kg"],
+    ["Screen", item.screenInches + " inches"],
+    ["Laptop ID", item.id]
   ];
 
   return rows
-    .map((row) => {
+    .map(function (row) {
       return `
-        <tr class="bg-panel">
-          <th class="w-40 px-4 py-2 text-left font-semibold text-muted">${row[0]}</th>
-          <td class="px-4 py-2">${row[1]}</td>
+        <tr>
+          <th scope="row">${row[0]}</th>
+          <td>${row[1]}</td>
         </tr>
       `;
     })
     .join("");
 }
-
-start();

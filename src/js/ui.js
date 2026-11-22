@@ -1,15 +1,16 @@
-import { getFavorites, getTheme, saveTheme, isFavorite, toggleFavorite } from "./storage.js";
+// Shared helpers used by every page.
 
-export const formatPrice = (price) => "$" + price.toLocaleString("en-US");
+function formatPrice(price) {
+  return "$" + price.toLocaleString("en-US");
+}
 
-export function startPage() {
+function startPage() {
   applyTheme();
   setupThemeButton();
   setupNavToggle();
   updateFavoriteCount();
 }
 
-// The saved theme is restored first, so every page opens in the same mode.
 function applyTheme() {
   const theme = getTheme();
   const button = document.getElementById("themeButton");
@@ -18,9 +19,9 @@ function applyTheme() {
 
   if (button !== null) {
     if (theme === "performance") {
-      button.textContent = "Battery Saver Mode";
+      button.textContent = "Battery saver";
     } else {
-      button.textContent = "Performance Mode";
+      button.textContent = "Performance";
     }
   }
 }
@@ -32,7 +33,7 @@ function setupThemeButton() {
     return;
   }
 
-  button.addEventListener("click", () => {
+  button.addEventListener("click", function () {
     if (getTheme() === "performance") {
       saveTheme("battery");
     } else {
@@ -51,17 +52,15 @@ function setupNavToggle() {
     return;
   }
 
-  button.addEventListener("click", () => {
-    const isOpen = nav.classList.contains("hidden");
+  button.addEventListener("click", function () {
+    const isOpen = nav.classList.toggle("open");
 
-    nav.classList.toggle("hidden", !isOpen);
-    nav.classList.toggle("flex", isOpen);
     button.setAttribute("aria-expanded", isOpen);
     button.textContent = isOpen ? "Close" : "Menu";
   });
 }
 
-export function updateFavoriteCount() {
+function updateFavoriteCount() {
   const counter = document.getElementById("favCount");
 
   if (counter !== null) {
@@ -69,42 +68,65 @@ export function updateFavoriteCount() {
   }
 }
 
-export function createCard(laptop) {
+function createCard(laptop) {
   const saved = isFavorite(laptop.id);
   const favoriteText = saved ? "Remove favorite" : "Add to favorite";
 
   return `
-    <article class="laptop-card flex flex-col">
+    <article class="laptop-card">
       <a href="details.html?id=${laptop.id}">
-        <img src="${laptop.image}" alt="${laptop.name}" class="mb-3 h-40 w-full rounded-lg object-cover" />
+        <img src="${laptop.image}" alt="${laptop.name}" class="card-image" />
       </a>
-      <p class="text-xs font-bold uppercase tracking-wide text-muted">${laptop.brand}</p>
-      <h3 class="mt-1 text-lg font-bold">
-        <a href="details.html?id=${laptop.id}" class="transition hover:text-brand">${laptop.name}</a>
-      </h3>
-      <p class="mt-2 text-2xl font-bold text-brand">${formatPrice(laptop.price)}</p>
-      <ul class="mt-3 space-y-1 text-sm text-muted">
-        <li>CPU: ${laptop.cpu}</li>
-        <li>RAM: ${laptop.ramGB} GB</li>
-        <li>Storage: ${laptop.storageGB} GB</li>
-        <li>Battery: ${laptop.batteryHours} hours</li>
-        <li>Screen: ${laptop.screenInches} inches</li>
-      </ul>
-      <button
-        type="button"
-        class="btn-action mt-4 w-full"
-        data-favorite="${laptop.id}"
-        aria-pressed="${saved}"
-      >${favoriteText}</button>
+
+      <div class="card-body">
+        <p class="card-brand">${laptop.brand}</p>
+        <h3 class="card-title">
+          <a href="details.html?id=${laptop.id}">${laptop.name}</a>
+        </h3>
+        <p class="card-price">${formatPrice(laptop.price)}</p>
+
+        <dl class="card-specs">
+          <div class="card-spec card-spec-wide">
+            <dt>CPU</dt>
+            <dd>${laptop.cpu}</dd>
+          </div>
+          <div class="card-spec">
+            <dt>RAM</dt>
+            <dd>${laptop.ramGB} GB</dd>
+          </div>
+          <div class="card-spec">
+            <dt>Storage</dt>
+            <dd>${laptop.storageGB} GB</dd>
+          </div>
+          <div class="card-spec">
+            <dt>Battery</dt>
+            <dd>${laptop.batteryHours} hours</dd>
+          </div>
+          <div class="card-spec">
+            <dt>Screen</dt>
+            <dd>${laptop.screenInches} in</dd>
+          </div>
+        </dl>
+
+        <div class="card-actions">
+          <a href="details.html?id=${laptop.id}" class="btn-quiet">Details</a>
+          <button
+            type="button"
+            class="btn-action"
+            data-favorite="${laptop.id}"
+            aria-pressed="${saved}"
+          >${favoriteText}</button>
+        </div>
+      </div>
     </article>
   `;
 }
 
-export function setupFavoriteButtons(container, onChange) {
+function setupFavoriteButtons(container, onChange) {
   const buttons = container.querySelectorAll("[data-favorite]");
 
-  buttons.forEach((button) => {
-    button.addEventListener("click", () => {
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () {
       const id = Number(button.dataset.favorite);
       const favorites = toggleFavorite(id);
       const saved = favorites.includes(id);
@@ -120,28 +142,6 @@ export function setupFavoriteButtons(container, onChange) {
   });
 }
 
-export function showSkeleton(container, count) {
-  let cards = "";
-
-  for (let i = 0; i < count; i++) {
-    cards += `
-      <div class="rounded-xl border border-line bg-panel p-4">
-        <div class="mb-3 h-40 w-full animate-pulse rounded-lg bg-line"></div>
-        <div class="mb-2 h-3 w-16 animate-pulse rounded bg-line"></div>
-        <div class="mb-3 h-5 w-3/4 animate-pulse rounded bg-line"></div>
-        <div class="mb-2 h-6 w-24 animate-pulse rounded bg-line"></div>
-        <div class="mb-2 h-3 w-2/3 animate-pulse rounded bg-line"></div>
-        <div class="mb-2 h-3 w-1/2 animate-pulse rounded bg-line"></div>
-        <div class="mt-4 h-9 w-full animate-pulse rounded-lg bg-line"></div>
-      </div>
-    `;
-  }
-
-  container.innerHTML = cards;
-}
-
-export function showMessage(container, text) {
-  container.innerHTML = `
-    <p class="col-span-full rounded-xl border border-line bg-panel p-6 text-center text-muted">${text}</p>
-  `;
+function showMessage(container, text) {
+  container.innerHTML = `<p class="message">${text}</p>`;
 }

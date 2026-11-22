@@ -1,9 +1,11 @@
+// All saved data lives in localStorage so it survives a page reload.
+
 const FAVORITES_KEY = "laptopFinderFavorites";
 const THEME_KEY = "laptopFinderTheme";
 const COMPARE_KEY = "laptopFinderCompare";
 
-export function getFavorites() {
-  const saved = localStorage.getItem(FAVORITES_KEY);
+function readList(key) {
+  const saved = localStorage.getItem(key);
 
   if (saved === null) {
     return [];
@@ -12,21 +14,37 @@ export function getFavorites() {
   return JSON.parse(saved);
 }
 
-export function saveFavorites(ids) {
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids));
+function writeList(key, ids) {
+  localStorage.setItem(key, JSON.stringify(ids));
 }
 
-export function isFavorite(id) {
+function getFavorites() {
+  return readList(FAVORITES_KEY);
+}
+
+function saveFavorites(ids) {
+  writeList(FAVORITES_KEY, ids);
+}
+
+function isFavorite(id) {
   return getFavorites().includes(id);
 }
 
-export function toggleFavorite(id) {
+function toggleFavorite(id) {
   const favorites = getFavorites();
   let next;
 
   if (favorites.includes(id)) {
-    next = favorites.filter((item) => item !== id);
-    saveCompare(getCompare().filter((item) => item !== id));
+    next = favorites.filter(function (item) {
+      return item !== id;
+    });
+
+    // A laptop that is no longer a favorite cannot stay in the comparison.
+    saveCompare(
+      getCompare().filter(function (item) {
+        return item !== id;
+      })
+    );
   } else {
     next = favorites.concat(id);
   }
@@ -35,12 +53,12 @@ export function toggleFavorite(id) {
   return next;
 }
 
-export function clearFavorites() {
+function clearFavorites() {
   saveFavorites([]);
   saveCompare([]);
 }
 
-export function getTheme() {
+function getTheme() {
   const theme = localStorage.getItem(THEME_KEY);
 
   if (theme === null) {
@@ -50,29 +68,26 @@ export function getTheme() {
   return theme;
 }
 
-export function saveTheme(theme) {
+function saveTheme(theme) {
   localStorage.setItem(THEME_KEY, theme);
 }
 
-export function getCompare() {
-  const saved = localStorage.getItem(COMPARE_KEY);
-
-  if (saved === null) {
-    return [];
-  }
-
-  return JSON.parse(saved);
+function getCompare() {
+  return readList(COMPARE_KEY);
 }
 
-export function saveCompare(ids) {
-  localStorage.setItem(COMPARE_KEY, JSON.stringify(ids));
+function saveCompare(ids) {
+  writeList(COMPARE_KEY, ids);
 }
 
-export function toggleCompare(id) {
+function toggleCompare(id) {
   const compare = getCompare();
 
   if (compare.includes(id)) {
-    const next = compare.filter((item) => item !== id);
+    const next = compare.filter(function (item) {
+      return item !== id;
+    });
+
     saveCompare(next);
     return { ids: next, message: "" };
   }

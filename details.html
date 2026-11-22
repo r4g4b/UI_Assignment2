@@ -4,13 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Details - Student Laptop Finder</title>
+    <script src="src/js/theme-init.js"></script>
     <link rel="stylesheet" href="dist/output.css" />
-    <script type="module" src="src/js/details.js"></script>
   </head>
   <body>
-    <header class="sticky top-0 z-20 border-b border-line bg-panel">
-      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-        <a href="index.html" class="text-lg font-bold text-brand">Laptop Finder</a>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-mark">LF</span>
+          <span>Laptop Finder</span>
+        </a>
 
         <button
           id="navToggle"
@@ -22,33 +25,35 @@
           Menu
         </button>
 
-        <nav
-          id="mainNav"
-          class="hidden w-full flex-col gap-2 border-t border-line pt-3 text-sm font-semibold md:flex md:w-auto md:flex-row md:items-center md:gap-5 md:border-0 md:pt-0"
-        >
-          <a href="index.html" class="py-1 transition hover:text-brand">Home</a>
-          <a href="laptops.html" class="py-1 transition hover:text-brand">Catalogue</a>
-          <a href="favorites.html" class="py-1 transition hover:text-brand">
-            Favorites (<span id="favCount">0</span>)
-          </a>
-          <a href="compare.html" class="py-1 transition hover:text-brand">Compare</a>
-          <button id="themeButton" type="button" class="btn-action">Performance Mode</button>
+        <nav id="mainNav" class="site-nav" aria-label="Main navigation">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="laptops.html" class="nav-link nav-link-active">Catalogue</a>
+          <a href="favorites.html" class="nav-link">Favorites (<span id="favCount">0</span>)</a>
+          <a href="compare.html" class="nav-link">Compare</a>
+          <button id="themeButton" type="button" class="btn-quiet">Performance</button>
         </nav>
       </div>
     </header>
 
-    <main class="mx-auto max-w-6xl px-4 py-8">
-      <a href="laptops.html" class="text-sm font-semibold text-brand hover:underline">
-        Back to the catalogue
+    <main class="page-wrap">
+      <a href="laptops.html" class="text-sm font-semibold text-muted hover:text-ink">
+        &larr; Back to the catalogue
       </a>
 
       <div id="details" class="mt-4"></div>
     </main>
 
-    <footer class="mt-12 border-t border-line bg-panel">
-      <div class="mx-auto max-w-6xl px-4 py-6 text-sm text-muted">
-        <p>Student Laptop Finder - SW302 User Interface Development, Assignment 2.</p>
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <p>Student Laptop Finder</p>
+        <p>SW302 User Interface Development, Assignment 2</p>
       </div>
     </footer>
+
+    <script src="data/laptops.js"></script>
+    <script src="src/js/api.js"></script>
+    <script src="src/js/storage.js"></script>
+    <script src="src/js/ui.js"></script>
+    <script src="src/js/details.js"></script>
   </body>
 </html>

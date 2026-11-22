@@ -4,13 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Catalogue - Student Laptop Finder</title>
+    <script src="src/js/theme-init.js"></script>
     <link rel="stylesheet" href="dist/output.css" />
-    <script type="module" src="src/js/catalogue.js"></script>
   </head>
   <body>
-    <header class="sticky top-0 z-20 border-b border-line bg-panel">
-      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-        <a href="index.html" class="text-lg font-bold text-brand">Laptop Finder</a>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-mark">LF</span>
+          <span>Laptop Finder</span>
+        </a>
 
         <button
           id="navToggle"
@@ -22,28 +25,29 @@
           Menu
         </button>
 
-        <nav
-          id="mainNav"
-          class="hidden w-full flex-col gap-2 border-t border-line pt-3 text-sm font-semibold md:flex md:w-auto md:flex-row md:items-center md:gap-5 md:border-0 md:pt-0"
-        >
-          <a href="index.html" class="py-1 transition hover:text-brand">Home</a>
-          <a href="laptops.html" class="py-1 text-brand">Catalogue</a>
-          <a href="favorites.html" class="py-1 transition hover:text-brand">
-            Favorites (<span id="favCount">0</span>)
-          </a>
-          <a href="compare.html" class="py-1 transition hover:text-brand">Compare</a>
-          <button id="themeButton" type="button" class="btn-action">Performance Mode</button>
+        <nav id="mainNav" class="site-nav" aria-label="Main navigation">
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="laptops.html" class="nav-link nav-link-active">Catalogue</a>
+          <a href="favorites.html" class="nav-link">Favorites (<span id="favCount">0</span>)</a>
+          <a href="compare.html" class="nav-link">Compare</a>
+          <button id="themeButton" type="button" class="btn-quiet">Performance</button>
         </nav>
       </div>
     </header>
 
-    <main class="mx-auto max-w-6xl px-4 py-8">
-      <h1 class="text-3xl font-bold">Laptop catalogue</h1>
+    <main class="page-wrap">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 class="text-3xl font-bold">Laptop catalogue</h1>
+          <p class="section-text">Search, filter and sort all 22 laptops.</p>
+        </div>
+        <a href="favorites.html" class="btn-quiet">View favorites</a>
+      </div>
 
-      <section class="mt-6 rounded-xl border border-line bg-panel p-4 md:p-6">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div>
-            <label for="searchInput" class="mb-1 block text-sm font-semibold">Search</label>
+      <section class="panel mt-6">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div class="md:col-span-2">
+            <label for="searchInput" class="field-label">Search</label>
             <input
               id="searchInput"
               type="search"
@@ -53,7 +57,7 @@
           </div>
 
           <div>
-            <label for="categoryFilter" class="mb-1 block text-sm font-semibold">Category</label>
+            <label for="categoryFilter" class="field-label">Category</label>
             <select id="categoryFilter" class="field">
               <option value="all">All categories</option>
               <option value="ultrabook">Ultrabook</option>
@@ -65,7 +69,7 @@
           </div>
 
           <div>
-            <label for="maxPriceFilter" class="mb-1 block text-sm font-semibold">
+            <label for="maxPriceFilter" class="field-label">
               Maximum price: <span id="maxPriceLabel">$2000</span>
             </label>
             <input
@@ -80,7 +84,7 @@
           </div>
 
           <div>
-            <label for="ramFilter" class="mb-1 block text-sm font-semibold">Minimum RAM</label>
+            <label for="ramFilter" class="field-label">Minimum RAM</label>
             <select id="ramFilter" class="field">
               <option value="0">Any RAM</option>
               <option value="8">8 GB or more</option>
@@ -90,7 +94,7 @@
           </div>
 
           <div>
-            <label for="sortFilter" class="mb-1 block text-sm font-semibold">Sort by</label>
+            <label for="sortFilter" class="field-label">Sort by</label>
             <select id="sortFilter" class="field">
               <option value="price-asc">Price: low to high</option>
               <option value="price-desc">Price: high to low</option>
@@ -104,19 +108,27 @@
       </section>
 
       <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <p id="resultCount" class="text-sm font-semibold text-muted"></p>
-        <a href="favorites.html" class="text-sm font-semibold text-brand hover:underline">
-          View favorites
-        </a>
+        <p id="resultCount" class="text-sm font-semibold text-muted">0 laptops found</p>
+        <p class="text-sm text-muted">Results update as you type.</p>
       </div>
 
-      <div id="laptopGrid" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+      <div
+        id="laptopGrid"
+        class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      ></div>
     </main>
 
-    <footer class="mt-12 border-t border-line bg-panel">
-      <div class="mx-auto max-w-6xl px-4 py-6 text-sm text-muted">
-        <p>Student Laptop Finder - SW302 User Interface Development, Assignment 2.</p>
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <p>Student Laptop Finder</p>
+        <p>SW302 User Interface Development, Assignment 2</p>
       </div>
     </footer>
+
+    <script src="data/laptops.js"></script>
+    <script src="src/js/api.js"></script>
+    <script src="src/js/storage.js"></script>
+    <script src="src/js/ui.js"></script>
+    <script src="src/js/catalogue.js"></script>
   </body>
 </html>

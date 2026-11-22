@@ -1,17 +1,11 @@
-export async function loadLaptops() {
-  try {
-    const response = await fetch("data/laptops.json");
+// The laptop list is stored in data/laptops.js so it works without a server.
 
-    if (!response.ok) {
-      throw new Error("The laptop data could not be loaded. Please run the site from a local server.");
-    }
-
-    return await response.json();
-  } catch {
-    throw new Error("The laptop data could not be loaded. Please run the site from a local server.");
-  }
+function loadLaptops() {
+  return window.LAPTOPS;
 }
 
-export function findLaptopById(laptops, id) {
-  return laptops.find((laptop) => laptop.id === Number(id));
+function findLaptopById(laptops, id) {
+  return laptops.find(function (laptop) {
+    return laptop.id === Number(id);
+  });
 }

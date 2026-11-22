@@ -4,13 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Laptop Finder</title>
+    <script src="src/js/theme-init.js"></script>
     <link rel="stylesheet" href="dist/output.css" />
-    <script type="module" src="src/js/home.js"></script>
   </head>
   <body>
-    <header class="sticky top-0 z-20 border-b border-line bg-panel">
-      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-        <a href="index.html" class="text-lg font-bold text-brand">Laptop Finder</a>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-mark">LF</span>
+          <span>Laptop Finder</span>
+        </a>
 
         <button
           id="navToggle"
@@ -22,84 +25,91 @@
           Menu
         </button>
 
-        <nav
-          id="mainNav"
-          class="hidden w-full flex-col gap-2 border-t border-line pt-3 text-sm font-semibold md:flex md:w-auto md:flex-row md:items-center md:gap-5 md:border-0 md:pt-0"
-        >
-          <a href="index.html" class="py-1 text-brand">Home</a>
-          <a href="laptops.html" class="py-1 transition hover:text-brand">Catalogue</a>
-          <a href="favorites.html" class="py-1 transition hover:text-brand">
-            Favorites (<span id="favCount">0</span>)
-          </a>
-          <a href="compare.html" class="py-1 transition hover:text-brand">Compare</a>
-          <button id="themeButton" type="button" class="btn-action">Performance Mode</button>
+        <nav id="mainNav" class="site-nav" aria-label="Main navigation">
+          <a href="index.html" class="nav-link nav-link-active">Home</a>
+          <a href="laptops.html" class="nav-link">Catalogue</a>
+          <a href="favorites.html" class="nav-link">Favorites (<span id="favCount">0</span>)</a>
+          <a href="compare.html" class="nav-link">Compare</a>
+          <button id="themeButton" type="button" class="btn-quiet">Performance</button>
         </nav>
       </div>
     </header>
 
-    <main class="mx-auto max-w-6xl px-4 py-8">
-      <section class="rounded-xl border border-line bg-panel p-6 md:p-10">
-        <h1 class="text-3xl font-bold md:text-4xl">Find the right laptop for your studies</h1>
-        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+    <main class="page-wrap">
+      <section class="hero">
+        <p class="eyebrow">Student Laptop Finder</p>
+        <h1 class="mt-2 max-w-2xl text-3xl font-bold md:text-4xl">
+          Find a laptop that fits your study day.
+        </h1>
+        <p class="mt-3 max-w-2xl text-muted">
+          Browse 22 laptops, filter by price and specifications, save favorites, and compare up
+          to four side by side.
+        </p>
+        <div class="mt-6 flex flex-col gap-2 sm:flex-row">
           <a href="laptops.html" class="btn-action">Browse the catalogue</a>
           <a href="favorites.html" class="btn-quiet">View favorites</a>
         </div>
       </section>
 
       <section class="mt-8">
-        <h2 class="text-2xl font-bold">Live statistics</h2>
+        <h2 class="section-title">Catalogue at a glance</h2>
         <div id="stats" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div class="stat-card">
-            <p class="text-sm text-muted">Laptops in catalogue</p>
-            <p id="statLaptops" class="mt-1 text-2xl font-bold text-brand">0</p>
+            <p class="stat-label">Laptops in catalogue</p>
+            <p id="statLaptops" class="stat-value">0</p>
           </div>
           <div class="stat-card">
-            <p class="text-sm text-muted">Lowest price</p>
-            <p id="statPrice" class="mt-1 text-2xl font-bold text-brand">$0</p>
+            <p class="stat-label">Lowest price</p>
+            <p id="statPrice" class="stat-value">$0</p>
           </div>
           <div class="stat-card">
-            <p class="text-sm text-muted">Brands</p>
-            <p id="statBrands" class="mt-1 text-2xl font-bold text-brand">0</p>
+            <p class="stat-label">Brands</p>
+            <p id="statBrands" class="stat-value">0</p>
           </div>
           <div class="stat-card">
-            <p class="text-sm text-muted">Saved favorites</p>
-            <p id="statFavorites" class="mt-1 text-2xl font-bold text-brand">0</p>
+            <p class="stat-label">Saved favorites</p>
+            <p id="statFavorites" class="stat-value">0</p>
           </div>
         </div>
       </section>
 
       <section class="mt-10">
-        <h2 class="text-2xl font-bold">Top picks by battery life</h2>
-        <div id="topPicks" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <p class="col-span-full rounded-xl border border-line bg-panel p-6 text-center text-muted">
-            Open this page through a local server to load the laptops.
-          </p>
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 class="section-title">Top picks by battery life</h2>
+            <p class="section-text">The three laptops that last longest on one charge.</p>
+          </div>
+          <a href="laptops.html" class="btn-quiet">See all laptops</a>
         </div>
+
+        <div
+          id="topPicks"
+          class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        ></div>
       </section>
 
       <section class="mt-10">
-        <h2 class="text-2xl font-bold">All pages</h2>
-        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <a href="laptops.html" class="laptop-card">
-            <h3 class="font-bold">Catalogue</h3>
-          </a>
-          <a href="details.html?id=1" class="laptop-card">
-            <h3 class="font-bold">Details</h3>
-          </a>
-          <a href="favorites.html" class="laptop-card">
-            <h3 class="font-bold">Favorites</h3>
-          </a>
-          <a href="compare.html" class="laptop-card">
-            <h3 class="font-bold">Compare</h3>
-          </a>
+        <h2 class="section-title">All pages</h2>
+        <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <a href="laptops.html" class="quick-link">Catalogue <span>Browse</span></a>
+          <a href="details.html?id=1" class="quick-link">Details <span>View one</span></a>
+          <a href="favorites.html" class="quick-link">Favorites <span>Saved</span></a>
+          <a href="compare.html" class="quick-link">Compare <span>Side by side</span></a>
         </div>
       </section>
     </main>
 
-    <footer class="mt-12 border-t border-line bg-panel">
-      <div class="mx-auto max-w-6xl px-4 py-6 text-sm text-muted">
-        <p>Student Laptop Finder - SW302 User Interface Development, Assignment 2.</p>
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <p>Student Laptop Finder</p>
+        <p>SW302 User Interface Development, Assignment 2</p>
       </div>
     </footer>
+
+    <script src="data/laptops.js"></script>
+    <script src="src/js/api.js"></script>
+    <script src="src/js/storage.js"></script>
+    <script src="src/js/ui.js"></script>
+    <script src="src/js/home.js"></script>
   </body>
 </html>

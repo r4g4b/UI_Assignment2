@@ -1,64 +1,41 @@
-import { loadLaptops } from "./api.js";
-import { getFavorites } from "./storage.js";
-import {
-  startPage,
-  createCard,
-  setupFavoriteButtons,
-  showSkeleton,
-  showMessage,
-  formatPrice,
-  updateFavoriteCount
-} from "./ui.js";
-
 startPage();
 
-const stats = document.getElementById("stats");
+const laptops = loadLaptops();
 const picks = document.getElementById("topPicks");
 
-showSkeleton(picks, 3);
+showStats(laptops);
+showPicks(laptops);
 
-async function start() {
-  try {
-    const laptops = await loadLaptops();
-    showStats(laptops);
-    showPicks(laptops);
-  } catch (error) {
-    showMessage(picks, error.message);
-    showMessage(stats, error.message);
-  }
-}
+function showStats(list) {
+  let lowestPrice = list[0].price;
+  let brands = [];
 
-function showStats(laptops) {
-  const lowestPrice = laptops.reduce((lowest, laptop) => {
-    if (laptop.price < lowest) {
-      return laptop.price;
+  list.forEach(function (laptop) {
+    if (laptop.price < lowestPrice) {
+      lowestPrice = laptop.price;
     }
-    return lowest;
-  }, laptops[0].price);
 
-  const brands = laptops.reduce((list, laptop) => {
-    if (!list.includes(laptop.brand)) {
-      list.push(laptop.brand);
+    if (!brands.includes(laptop.brand)) {
+      brands.push(laptop.brand);
     }
-    return list;
-  }, []);
+  });
 
-  document.getElementById("statLaptops").textContent = laptops.length;
+  document.getElementById("statLaptops").textContent = list.length;
   document.getElementById("statPrice").textContent = formatPrice(lowestPrice);
   document.getElementById("statBrands").textContent = brands.length;
   document.getElementById("statFavorites").textContent = getFavorites().length;
 }
 
-function showPicks(laptops) {
-  const bestBattery = laptops.slice().sort((a, b) => b.batteryHours - a.batteryHours);
-  const topThree = bestBattery.slice(0, 3);
+function showPicks(list) {
+  const sorted = list.slice().sort(function (a, b) {
+    return b.batteryHours - a.batteryHours;
+  });
 
-  picks.innerHTML = topThree.map((laptop) => createCard(laptop)).join("");
+  const topThree = sorted.slice(0, 3);
 
-  setupFavoriteButtons(picks, () => {
-    updateFavoriteCount();
+  picks.innerHTML = topThree.map(createCard).join("");
+
+  setupFavoriteButtons(picks, function () {
     document.getElementById("statFavorites").textContent = getFavorites().length;
   });
 }
-
-start();

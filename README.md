@@ -3,8 +3,8 @@
 A responsive five-page web app that helps students browse laptops, search and filter them,
 read the full specifications of one laptop, save favorites, and compare favorites side by side.
 
-All laptop data is loaded with JavaScript from `data/laptops.json`, and all styling uses
-Tailwind CSS 4.
+The app opens directly from `index.html`. No local server is needed: the laptop list is stored
+in `data/laptops.js` and every script is a classic script.
 
 ## Pages
 
@@ -16,19 +16,26 @@ Tailwind CSS 4.
 | `favorites.html` | Saved laptops with total and average price |
 | `compare.html` | Side-by-side comparison of two to four favorites |
 
-## Install
+## Open the app
+
+Double-click `index.html`, or open it in a browser:
+
+```bash
+open index.html
+```
+
+No install or build step is needed to use the app. The compiled stylesheet is already in
+`dist/output.css`.
+
+## Change the styles
+
+The styles use Tailwind CSS 4. If you change `src/input.css` or the class names in the HTML,
+rebuild the stylesheet:
 
 ```bash
 npm install
-```
-
-## Build the CSS
-
-```bash
 npm run build
 ```
-
-This writes the compiled stylesheet to `dist/output.css`.
 
 To rebuild on every change while working:
 
@@ -36,25 +43,24 @@ To rebuild on every change while working:
 npm run dev
 ```
 
-## Run the site
+## Laptop data
 
-The pages load the JSON file with `fetch()`, so they must be opened through a local server.
-For example, with the VS Code Live Server extension, or:
+- `data/laptops.json` is the readable copy of the laptop data.
+- `data/laptops.js` is the same data wrapped in `window.LAPTOPS = [...]` so it can load from
+  `file://`.
 
-```bash
-python3 -m http.server 8000
-```
-
-Then open `http://localhost:8000`.
+If you edit the JSON file, copy the same list into `data/laptops.js` so the pages show the
+change.
 
 ## Themes
 
 The header has a theme switch on every page:
 
-- **Battery Saver Mode** - light gray background, black text and black buttons.
-- **Performance Mode** - black background, white text and white buttons.
+- **Battery saver** - light gray page, white cards, black text and buttons.
+- **Performance** - black page, dark gray cards, white text and buttons.
 
-The choice is saved in `localStorage` and restored on every page.
+Only black, white and gray tones are used. The choice is saved in `localStorage` and restored
+on every page.
 
 ## Folder structure
 
@@ -68,6 +74,7 @@ laptop_finder_ahmed/
 ├── src/
 │   ├── input.css
 │   └── js/
+│       ├── theme-init.js
 │       ├── api.js
 │       ├── storage.js
 │       ├── ui.js
@@ -77,7 +84,9 @@ laptop_finder_ahmed/
 │       ├── details.js
 │       ├── favorites.js
 │       └── comparePage.js
-├── data/laptops.json
+├── data/
+│   ├── laptops.json
+│   └── laptops.js
 ├── dist/output.css
 ├── assets/
 ├── package.json
