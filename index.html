@@ -51,15 +51,15 @@
         <div id="stats" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div class="stat-card">
             <p class="text-sm text-muted">Laptops in catalogue</p>
-            <p id="statLaptops" class="mt-1 text-2xl font-bold text-brand">0</p>
+            <p id="statLaptops" class="mt-1 text-2xl font-bold text-brand">22</p>
           </div>
           <div class="stat-card">
             <p class="text-sm text-muted">Lowest price</p>
-            <p id="statPrice" class="mt-1 text-2xl font-bold text-brand">$0</p>
+            <p id="statPrice" class="mt-1 text-2xl font-bold text-brand">$449</p>
           </div>
           <div class="stat-card">
             <p class="text-sm text-muted">Brands</p>
-            <p id="statBrands" class="mt-1 text-2xl font-bold text-brand">0</p>
+            <p id="statBrands" class="mt-1 text-2xl font-bold text-brand">10</p>
           </div>
           <div class="stat-card">
             <p class="text-sm text-muted">Saved favorites</p>
@@ -70,7 +70,64 @@
 
       <section class="mt-10">
         <h2 class="text-2xl font-bold">Top picks by battery life</h2>
-        <div id="topPicks" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+        <div id="topPicks" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <article class="laptop-card flex flex-col">
+            <a href="details.html?id=1">
+              <img src="assets/laptop-1.svg" alt="MacBook Air M3" class="mb-3 h-40 w-full rounded-lg object-cover" />
+            </a>
+            <p class="text-xs font-bold uppercase tracking-wide text-muted">Apple</p>
+            <h3 class="mt-1 text-lg font-bold">
+              <a href="details.html?id=1" class="transition hover:text-brand">MacBook Air M3</a>
+            </h3>
+            <p class="mt-2 text-2xl font-bold text-brand">$1,099</p>
+            <ul class="mt-3 space-y-1 text-sm text-muted">
+              <li>CPU: Apple M3</li>
+              <li>RAM: 16 GB</li>
+              <li>Storage: 512 GB</li>
+              <li>Battery: 18 hours</li>
+              <li>Screen: 13.6 inches</li>
+            </ul>
+            <button type="button" class="btn-action mt-4 w-full" data-favorite="1" aria-pressed="false">Add to favorite</button>
+          </article>
+
+          <article class="laptop-card flex flex-col">
+            <a href="details.html?id=2">
+              <img src="assets/laptop-2.svg" alt="MacBook Pro 14 M3" class="mb-3 h-40 w-full rounded-lg object-cover" />
+            </a>
+            <p class="text-xs font-bold uppercase tracking-wide text-muted">Apple</p>
+            <h3 class="mt-1 text-lg font-bold">
+              <a href="details.html?id=2" class="transition hover:text-brand">MacBook Pro 14 M3</a>
+            </h3>
+            <p class="mt-2 text-2xl font-bold text-brand">$1,599</p>
+            <ul class="mt-3 space-y-1 text-sm text-muted">
+              <li>CPU: Apple M3 Pro</li>
+              <li>RAM: 18 GB</li>
+              <li>Storage: 512 GB</li>
+              <li>Battery: 17 hours</li>
+              <li>Screen: 14.2 inches</li>
+            </ul>
+            <button type="button" class="btn-action mt-4 w-full" data-favorite="2" aria-pressed="false">Add to favorite</button>
+          </article>
+
+          <article class="laptop-card flex flex-col">
+            <a href="details.html?id=17">
+              <img src="assets/laptop-17.svg" alt="Galaxy Book3 Pro" class="mb-3 h-40 w-full rounded-lg object-cover" />
+            </a>
+            <p class="text-xs font-bold uppercase tracking-wide text-muted">Samsung</p>
+            <h3 class="mt-1 text-lg font-bold">
+              <a href="details.html?id=17" class="transition hover:text-brand">Galaxy Book3 Pro</a>
+            </h3>
+            <p class="mt-2 text-2xl font-bold text-brand">$1,249</p>
+            <ul class="mt-3 space-y-1 text-sm text-muted">
+              <li>CPU: Intel Core i7-1360P</li>
+              <li>RAM: 16 GB</li>
+              <li>Storage: 512 GB</li>
+              <li>Battery: 16 hours</li>
+              <li>Screen: 14 inches</li>
+            </ul>
+            <button type="button" class="btn-action mt-4 w-full" data-favorite="17" aria-pressed="false">Add to favorite</button>
+          </article>
+        </div>
       </section>
 
       <section class="mt-10">
