@@ -38,7 +38,7 @@ function showLaptop(laptop) {
         <p class="mt-3 text-3xl font-bold text-brand">${formatPrice(laptop.price)}</p>
         <p class="mt-4 text-muted">${laptop.description}</p>
         <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-          <button id="favoriteButton" type="button" class="btn-action">
+          <button id="favoriteButton" type="button" class="btn-action" aria-pressed="${saved}">
             ${saved ? "Remove favorite" : "Add to favorite"}
           </button>
           <button id="compareButton" type="button" class="btn-quiet">Add to comparison</button>
@@ -68,6 +68,7 @@ function showLaptop(laptop) {
     const nowSaved = favorites.includes(laptop.id);
 
     favoriteButton.textContent = nowSaved ? "Remove favorite" : "Add to favorite";
+    favoriteButton.setAttribute("aria-pressed", nowSaved);
     updateFavoriteCount();
   });
 
@@ -75,6 +76,7 @@ function showLaptop(laptop) {
     if (!isFavorite(laptop.id)) {
       toggleFavorite(laptop.id);
       favoriteButton.textContent = "Remove favorite";
+      favoriteButton.setAttribute("aria-pressed", "true");
       updateFavoriteCount();
     }
 

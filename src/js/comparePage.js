@@ -9,6 +9,15 @@ const picker = document.getElementById("comparePicker");
 const message = document.getElementById("compareMessage");
 const tableBox = document.getElementById("compareTable");
 
+tableBox.innerHTML = `
+  <div class="overflow-hidden rounded-xl border border-line bg-panel">
+    <div class="h-12 animate-pulse bg-line"></div>
+    <div class="h-12 animate-pulse border-t border-line"></div>
+    <div class="h-12 animate-pulse border-t border-line"></div>
+    <div class="h-12 animate-pulse border-t border-line"></div>
+  </div>
+`;
+
 async function start() {
   try {
     const laptops = await loadLaptops();

@@ -1,11 +1,15 @@
 export async function loadLaptops() {
-  const response = await fetch("data/laptops.json");
+  try {
+    const response = await fetch("data/laptops.json");
 
-  if (!response.ok) {
+    if (!response.ok) {
+      throw new Error("The laptop data could not be loaded. Please run the site from a local server.");
+    }
+
+    return await response.json();
+  } catch {
     throw new Error("The laptop data could not be loaded. Please run the site from a local server.");
   }
-
-  return await response.json();
 }
 
 export function findLaptopById(laptops, id) {
