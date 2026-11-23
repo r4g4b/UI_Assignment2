@@ -2,22 +2,22 @@
 @plugin "@tailwindcss/forms";
 
 @theme {
-  --color-saver-page: #f0fdf4;
+  --color-saver-page: #fafafa;
   --color-saver-panel: #ffffff;
-  --color-saver-ink: #102318;
-  --color-saver-muted: #4a6353;
-  --color-saver-line: #cfe3d3;
-  --color-saver-brand: #15803d;
-  --color-saver-brand-soft: #dcfce7;
+  --color-saver-ink: #000000;
+  --color-saver-muted: #737373;
+  --color-saver-line: #e5e5e5;
+  --color-saver-brand: #171717;
+  --color-saver-brand-soft: #f3f3f3;
   --color-saver-on-brand: #ffffff;
 
   --color-performance-page: #0a0a0a;
   --color-performance-panel: #171717;
   --color-performance-ink: #fafafa;
-  --color-performance-muted: #a3a3a3;
+  --color-performance-muted: #737373;
   --color-performance-line: #2e2e2e;
-  --color-performance-brand: #f97316;
-  --color-performance-brand-soft: #431407;
+  --color-performance-brand: #d4d4d4;
+  --color-performance-brand-soft: #262626;
   --color-performance-on-brand: #0a0a0a;
 }
 
