@@ -1,20 +1,63 @@
+import { DATA_ERROR, findLaptopById, loadLaptops } from "./api.js";
+import {
+  getCompare,
+  isFavorite,
+  toggleCompare,
+  toggleFavorite
+} from "./storage.js";
+import {
+  formatPrice,
+  showMessage,
+  startPage,
+  updateFavoriteCount
+} from "./ui.js";
+
 startPage();
 
-const laptopId = new URLSearchParams(window.location.search).get("id");
 const details = document.getElementById("details");
-const laptop = findLaptopById(loadLaptops(), laptopId);
+const laptopId = new URLSearchParams(window.location.search).get("id");
 
-if (laptop === undefined) {
-  showMessage(
-    details,
-    "We could not find that laptop. Please return to the catalogue and pick one."
-  );
-} else {
-  showLaptop(laptop);
+async function init() {
+  showDetailsSkeleton();
+
+  try {
+    const laptops = await loadLaptops();
+    const laptop = findLaptopById(laptops, laptopId);
+
+    if (laptop === undefined) {
+      showMessage(
+        details,
+        "We could not find that laptop. Please return to the catalogue and pick one."
+      );
+      return;
+    }
+
+    showLaptop(laptop);
+  } catch (error) {
+    showMessage(details, DATA_ERROR);
+  }
+}
+
+function showDetailsSkeleton() {
+  details.innerHTML = `
+    <div class="grid gap-6 lg:grid-cols-2">
+      <div class="panel animate-pulse" aria-hidden="true">
+        <div class="h-64 w-full rounded-lg bg-page"></div>
+      </div>
+      <div class="panel animate-pulse" aria-hidden="true">
+        <div class="h-3 w-28 rounded bg-page"></div>
+        <div class="mt-3 h-8 w-3/4 rounded bg-page"></div>
+        <div class="mt-3 h-8 w-32 rounded bg-page"></div>
+        <div class="mt-4 h-20 rounded-lg bg-page"></div>
+        <div class="mt-6 h-11 rounded-lg bg-page"></div>
+      </div>
+    </div>
+  `;
 }
 
 function showLaptop(item) {
   const saved = isFavorite(item.id);
+  const comparing = getCompare().includes(item.id);
 
   details.innerHTML = `
     <div class="grid gap-6 lg:grid-cols-2">
@@ -25,7 +68,7 @@ function showLaptop(item) {
       <div class="panel">
         <p class="eyebrow">${item.brand} / ${item.category}</p>
         <h1 class="mt-2 text-3xl font-bold md:text-4xl">${item.name}</h1>
-        <p class="mt-3 text-3xl font-bold">${formatPrice(item.price)}</p>
+        <p class="mt-3 text-3xl font-bold text-brand">${formatPrice(item.price)}</p>
         <p class="mt-4 text-muted">${item.description}</p>
 
         <div class="mt-6 flex flex-col gap-2 sm:flex-row">
@@ -36,7 +79,7 @@ function showLaptop(item) {
             aria-pressed="${saved}"
           >${saved ? "Remove favorite" : "Add to favorite"}</button>
           <button id="compareButton" type="button" class="btn-quiet">
-            Add to comparison
+            ${comparing ? "Remove from comparison" : "Add to comparison"}
           </button>
         </div>
 
@@ -60,7 +103,7 @@ function showLaptop(item) {
   const compareButton = document.getElementById("compareButton");
   const message = document.getElementById("detailsMessage");
 
-  favoriteButton.addEventListener("click", function () {
+  favoriteButton.addEventListener("click", () => {
     const favorites = toggleFavorite(item.id);
     const nowSaved = favorites.includes(item.id);
 
@@ -69,8 +112,7 @@ function showLaptop(item) {
     updateFavoriteCount();
   });
 
-  compareButton.addEventListener("click", function () {
-    // Comparing only works with favorites, so save the laptop first.
+  compareButton.addEventListener("click", () => {
     if (!isFavorite(item.id)) {
       toggleFavorite(item.id);
       favoriteButton.textContent = "Remove favorite";
@@ -79,10 +121,15 @@ function showLaptop(item) {
     }
 
     const result = toggleCompare(item.id);
+    const inCompare = result.ids.includes(item.id);
+
+    compareButton.textContent = inCompare
+      ? "Remove from comparison"
+      : "Add to comparison";
 
     if (result.message !== "") {
       message.textContent = result.message;
-    } else if (result.ids.includes(item.id)) {
+    } else if (inCompare) {
       message.textContent = "Added to the comparison list.";
     } else {
       message.textContent = "Removed from the comparison list.";
@@ -106,13 +153,15 @@ function createSpecRows(item) {
   ];
 
   return rows
-    .map(function (row) {
-      return `
+    .map(
+      (row) => `
         <tr>
           <th scope="row">${row[0]}</th>
           <td>${row[1]}</td>
         </tr>
-      `;
-    })
+      `
+    )
     .join("");
 }
+
+init();

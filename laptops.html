@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="assets/laptop-1.svg" type="image/svg+xml" />
     <title>Catalogue - Student Laptop Finder</title>
     <script src="src/js/theme-init.js"></script>
     <link rel="stylesheet" href="dist/output.css" />
@@ -12,26 +13,30 @@
       <div class="site-header-inner">
         <a href="index.html" class="brand">
           <span class="brand-mark">LF</span>
-          <span>Laptop Finder</span>
+          <span class="hidden sm:inline">Laptop Finder</span>
         </a>
 
-        <button
-          id="navToggle"
-          type="button"
-          class="btn-quiet md:hidden"
-          aria-controls="mainNav"
-          aria-expanded="false"
-        >
-          Menu
-        </button>
-
-        <nav id="mainNav" class="site-nav" aria-label="Main navigation">
+        <nav id="mainNav" class="site-nav order-3 md:order-2" aria-label="Main navigation">
           <a href="index.html" class="nav-link">Home</a>
           <a href="laptops.html" class="nav-link nav-link-active">Catalogue</a>
           <a href="favorites.html" class="nav-link">Favorites (<span id="favCount">0</span>)</a>
           <a href="compare.html" class="nav-link">Compare</a>
-          <button id="themeButton" type="button" class="btn-quiet">Performance</button>
         </nav>
+
+        <div class="ml-auto flex items-center gap-2 md:order-3 md:ml-0">
+          <button id="themeButton" type="button" class="btn-quiet" aria-label="Switch color theme">
+            Performance
+          </button>
+          <button
+            id="navToggle"
+            type="button"
+            class="btn-quiet md:hidden"
+            aria-controls="mainNav"
+            aria-expanded="false"
+          >
+            Menu
+          </button>
+        </div>
       </div>
     </header>
 
@@ -39,7 +44,7 @@
       <div class="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 class="text-3xl font-bold">Laptop catalogue</h1>
-          <p class="section-text">Search, filter and sort all 22 laptops.</p>
+          <p class="section-text">Search, filter and sort every laptop.</p>
         </div>
         <a href="favorites.html" class="btn-quiet">View favorites</a>
       </div>
@@ -125,10 +130,6 @@
       </div>
     </footer>
 
-    <script src="data/laptops.js"></script>
-    <script src="src/js/api.js"></script>
-    <script src="src/js/storage.js"></script>
-    <script src="src/js/ui.js"></script>
-    <script src="src/js/catalogue.js"></script>
+    <script type="module" src="src/js/catalogue.js"></script>
   </body>
 </html>

@@ -1,99 +1,67 @@
-const compareRows = [
+export const compareRows = [
   {
     label: "Price",
-    getValue: function (laptop) {
-      return laptop.price;
-    },
-    getText: function (laptop) {
-      return formatPrice(laptop.price);
-    },
-    best: "low"
+    best: "low",
+    getValue: (laptop) => laptop.price,
+    getText: (laptop) => "$" + laptop.price.toLocaleString("en-US")
+  },
+  {
+    label: "Brand",
+    best: "none",
+    getValue: (laptop) => laptop.brand,
+    getText: (laptop) => laptop.brand
   },
   {
     label: "Category",
-    getValue: function (laptop) {
-      return laptop.category;
-    },
-    getText: function (laptop) {
-      return laptop.category;
-    },
-    best: "none"
+    best: "none",
+    getValue: (laptop) => laptop.category,
+    getText: (laptop) => laptop.category
   },
   {
     label: "CPU",
-    getValue: function (laptop) {
-      return laptop.cpu;
-    },
-    getText: function (laptop) {
-      return laptop.cpu;
-    },
-    best: "none"
+    best: "none",
+    getValue: (laptop) => laptop.cpu,
+    getText: (laptop) => laptop.cpu
   },
   {
     label: "RAM",
-    getValue: function (laptop) {
-      return laptop.ramGB;
-    },
-    getText: function (laptop) {
-      return laptop.ramGB + " GB";
-    },
-    best: "high"
+    best: "high",
+    getValue: (laptop) => laptop.ramGB,
+    getText: (laptop) => laptop.ramGB + " GB"
   },
   {
     label: "Storage",
-    getValue: function (laptop) {
-      return laptop.storageGB;
-    },
-    getText: function (laptop) {
-      return laptop.storageGB + " GB";
-    },
-    best: "high"
+    best: "high",
+    getValue: (laptop) => laptop.storageGB,
+    getText: (laptop) => laptop.storageGB + " GB"
   },
   {
     label: "Battery",
-    getValue: function (laptop) {
-      return laptop.batteryHours;
-    },
-    getText: function (laptop) {
-      return laptop.batteryHours + " hours";
-    },
-    best: "high"
+    best: "high",
+    getValue: (laptop) => laptop.batteryHours,
+    getText: (laptop) => laptop.batteryHours + " hours"
   },
   {
     label: "Weight",
-    getValue: function (laptop) {
-      return laptop.weightKg;
-    },
-    getText: function (laptop) {
-      return laptop.weightKg + " kg";
-    },
-    best: "low"
+    best: "low",
+    getValue: (laptop) => laptop.weightKg,
+    getText: (laptop) => laptop.weightKg + " kg"
   },
   {
     label: "Screen",
-    getValue: function (laptop) {
-      return laptop.screenInches;
-    },
-    getText: function (laptop) {
-      return laptop.screenInches + " inches";
-    },
-    best: "none"
+    best: "none",
+    getValue: (laptop) => laptop.screenInches,
+    getText: (laptop) => laptop.screenInches + " inches"
   }
 ];
 
-// The best value is found from the numbers, not from the text on the page.
-function getBestValue(laptops, row) {
+// The best value is taken from the numeric values, not from the text in the table.
+export function getBestValue(laptops, row) {
   if (row.best === "none") {
     return null;
   }
 
-  const values = laptops.map(function (laptop) {
-    return row.getValue(laptop);
-  });
+  const values = laptops.map((laptop) => row.getValue(laptop));
 
-  if (row.best === "low") {
-    return Math.min.apply(null, values);
-  }
-
-  return Math.max.apply(null, values);
+  return row.best === "low" ? Math.min(...values) : Math.max(...values);
 }

@@ -1,93 +1,64 @@
-// All saved data lives in localStorage so it survives a page reload.
-
 const FAVORITES_KEY = "laptopFinderFavorites";
 const THEME_KEY = "laptopFinderTheme";
 const COMPARE_KEY = "laptopFinderCompare";
 
 function readList(key) {
-  const saved = localStorage.getItem(key);
-
-  if (saved === null) {
+  try {
+    const list = JSON.parse(localStorage.getItem(key));
+    return Array.isArray(list) ? list : [];
+  } catch (error) {
     return [];
   }
-
-  return JSON.parse(saved);
 }
 
 function writeList(key, ids) {
   localStorage.setItem(key, JSON.stringify(ids));
 }
 
-function getFavorites() {
-  return readList(FAVORITES_KEY);
-}
+export const getFavorites = () => readList(FAVORITES_KEY);
 
-function saveFavorites(ids) {
+export const isFavorite = (id) => getFavorites().includes(id);
+
+export const getTheme = () =>
+  localStorage.getItem(THEME_KEY) === "performance" ? "performance" : "battery";
+
+export const saveTheme = (theme) => localStorage.setItem(THEME_KEY, theme);
+
+export const getCompare = () => readList(COMPARE_KEY);
+
+export function saveFavorites(ids) {
   writeList(FAVORITES_KEY, ids);
 }
 
-function isFavorite(id) {
-  return getFavorites().includes(id);
+export function saveCompare(ids) {
+  writeList(COMPARE_KEY, ids);
 }
 
-function toggleFavorite(id) {
+export function toggleFavorite(id) {
   const favorites = getFavorites();
-  let next;
-
-  if (favorites.includes(id)) {
-    next = favorites.filter(function (item) {
-      return item !== id;
-    });
-
-    // A laptop that is no longer a favorite cannot stay in the comparison.
-    saveCompare(
-      getCompare().filter(function (item) {
-        return item !== id;
-      })
-    );
-  } else {
-    next = favorites.concat(id);
-  }
+  const next = favorites.includes(id)
+    ? favorites.filter((item) => item !== id)
+    : favorites.concat(id);
 
   saveFavorites(next);
+
+  if (!next.includes(id)) {
+    saveCompare(getCompare().filter((item) => item !== id));
+  }
+
   return next;
 }
 
-function clearFavorites() {
+export function clearFavorites() {
   saveFavorites([]);
   saveCompare([]);
 }
 
-function getTheme() {
-  const theme = localStorage.getItem(THEME_KEY);
-
-  if (theme === null) {
-    return "battery";
-  }
-
-  return theme;
-}
-
-function saveTheme(theme) {
-  localStorage.setItem(THEME_KEY, theme);
-}
-
-function getCompare() {
-  return readList(COMPARE_KEY);
-}
-
-function saveCompare(ids) {
-  writeList(COMPARE_KEY, ids);
-}
-
-function toggleCompare(id) {
+export function toggleCompare(id) {
   const compare = getCompare();
 
   if (compare.includes(id)) {
-    const next = compare.filter(function (item) {
-      return item !== id;
-    });
-
+    const next = compare.filter((item) => item !== id);
     saveCompare(next);
     return { ids: next, message: "" };
   }

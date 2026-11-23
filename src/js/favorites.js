@@ -1,17 +1,37 @@
+import { DATA_ERROR, loadLaptops } from "./api.js";
+import { clearFavorites, getFavorites } from "./storage.js";
+import {
+  createCard,
+  formatPrice,
+  setupFavoriteButtons,
+  showMessage,
+  showSkeletons,
+  startPage,
+  updateFavoriteCount
+} from "./ui.js";
+
 startPage();
 
 const summary = document.getElementById("favoritesSummary");
 const list = document.getElementById("favoritesList");
 const clearButton = document.getElementById("clearButton");
-const allLaptops = loadLaptops();
 
-renderFavorites();
+let allLaptops = [];
+
+async function init() {
+  showSkeletons(list, 3);
+
+  try {
+    allLaptops = await loadLaptops();
+    renderFavorites();
+  } catch (error) {
+    showMessage(list, DATA_ERROR);
+  }
+}
 
 function renderFavorites() {
   const favorites = getFavorites();
-  const saved = allLaptops.filter(function (laptop) {
-    return favorites.includes(laptop.id);
-  });
+  const saved = allLaptops.filter((laptop) => favorites.includes(laptop.id));
 
   clearButton.classList.toggle("hidden", saved.length === 0);
 
@@ -21,10 +41,7 @@ function renderFavorites() {
     return;
   }
 
-  const total = saved.reduce(function (sum, laptop) {
-    return sum + laptop.price;
-  }, 0);
-
+  const total = saved.reduce((sum, laptop) => sum + laptop.price, 0);
   const average = Math.round(total / saved.length);
 
   summary.innerHTML = `
@@ -48,8 +65,10 @@ function renderFavorites() {
   setupFavoriteButtons(list, renderFavorites);
 }
 
-clearButton.addEventListener("click", function () {
+clearButton.addEventListener("click", () => {
   clearFavorites();
   updateFavoriteCount();
   renderFavorites();
 });
+
+init();

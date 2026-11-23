@@ -1,3 +1,12 @@
+import { DATA_ERROR, loadLaptops } from "./api.js";
+import {
+  createCard,
+  setupFavoriteButtons,
+  showMessage,
+  showSkeletons,
+  startPage
+} from "./ui.js";
+
 startPage();
 
 const grid = document.getElementById("laptopGrid");
@@ -9,9 +18,20 @@ const maxPriceLabel = document.getElementById("maxPriceLabel");
 const ramFilter = document.getElementById("ramFilter");
 const sortFilter = document.getElementById("sortFilter");
 
-const allLaptops = loadLaptops();
+let allLaptops = [];
 
-renderLaptops();
+async function init() {
+  showSkeletons(grid, 6);
+  resultCount.textContent = "Loading laptops...";
+
+  try {
+    allLaptops = await loadLaptops();
+    renderLaptops();
+  } catch (error) {
+    resultCount.textContent = "0 laptops found";
+    showMessage(grid, DATA_ERROR);
+  }
+}
 
 function renderLaptops() {
   const text = searchInput.value.toLowerCase().trim();
@@ -19,20 +39,23 @@ function renderLaptops() {
   const maxPrice = Number(maxPriceFilter.value);
   const minRam = Number(ramFilter.value);
 
-  let laptops = allLaptops.filter(function (laptop) {
-    const matchesText =
-      laptop.name.toLowerCase().includes(text) || laptop.brand.toLowerCase().includes(text);
+  const laptops = sortLaptops(
+    allLaptops.filter((laptop) => {
+      const matchesText =
+        laptop.name.toLowerCase().includes(text) ||
+        laptop.brand.toLowerCase().includes(text);
 
-    return (
-      matchesText &&
-      (category === "all" || laptop.category === category) &&
-      laptop.price <= maxPrice &&
-      laptop.ramGB >= minRam
-    );
-  });
+      return (
+        matchesText &&
+        (category === "all" || laptop.category === category) &&
+        laptop.price <= maxPrice &&
+        laptop.ramGB >= minRam
+      );
+    })
+  );
 
-  laptops = sortLaptops(laptops);
-  resultCount.textContent = laptops.length + " laptops found";
+  resultCount.textContent =
+    laptops.length === 1 ? "1 laptop found" : laptops.length + " laptops found";
 
   if (laptops.length === 0) {
     showMessage(grid, "No laptop matches your filters. Try a different search or price.");
@@ -44,7 +67,7 @@ function renderLaptops() {
 }
 
 function sortLaptops(list) {
-  return list.slice().sort(function (a, b) {
+  return list.slice().sort((a, b) => {
     const sort = sortFilter.value;
 
     if (sort === "price-asc") {
@@ -76,7 +99,9 @@ categoryFilter.addEventListener("change", renderLaptops);
 ramFilter.addEventListener("change", renderLaptops);
 sortFilter.addEventListener("change", renderLaptops);
 
-maxPriceFilter.addEventListener("input", function () {
+maxPriceFilter.addEventListener("input", () => {
   maxPriceLabel.textContent = "$" + maxPriceFilter.value;
   renderLaptops();
 });
+
+init();

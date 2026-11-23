@@ -1,6 +1,26 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
 
+@theme {
+  --color-saver-page: #f0fdf4;
+  --color-saver-panel: #ffffff;
+  --color-saver-ink: #102318;
+  --color-saver-muted: #4a6353;
+  --color-saver-line: #cfe3d3;
+  --color-saver-brand: #15803d;
+  --color-saver-brand-soft: #dcfce7;
+  --color-saver-on-brand: #ffffff;
+
+  --color-performance-page: #0a0a0a;
+  --color-performance-panel: #171717;
+  --color-performance-ink: #fafafa;
+  --color-performance-muted: #a3a3a3;
+  --color-performance-line: #2e2e2e;
+  --color-performance-brand: #f97316;
+  --color-performance-brand-soft: #431407;
+  --color-performance-on-brand: #0a0a0a;
+}
+
 @theme inline {
   --color-page: var(--page);
   --color-panel: var(--panel);
@@ -13,30 +33,31 @@
 }
 
 @layer base {
-  :root {
-    --page: #f4f4f5;
-    --panel: #ffffff;
-    --ink: #111111;
-    --muted: #525252;
-    --line: #d4d4d4;
-    --brand: #171717;
-    --brand-soft: #e5e5e5;
-    --on-brand: #ffffff;
+  :root,
+  html[data-theme="battery"] {
+    --page: var(--color-saver-page);
+    --panel: var(--color-saver-panel);
+    --ink: var(--color-saver-ink);
+    --muted: var(--color-saver-muted);
+    --line: var(--color-saver-line);
+    --brand: var(--color-saver-brand);
+    --brand-soft: var(--color-saver-brand-soft);
+    --on-brand: var(--color-saver-on-brand);
   }
 
   html[data-theme="performance"] {
-    --page: #0a0a0a;
-    --panel: #171717;
-    --ink: #f5f5f5;
-    --muted: #a3a3a3;
-    --line: #2e2e2e;
-    --brand: #f5f5f5;
-    --brand-soft: #262626;
-    --on-brand: #0a0a0a;
+    --page: var(--color-performance-page);
+    --panel: var(--color-performance-panel);
+    --ink: var(--color-performance-ink);
+    --muted: var(--color-performance-muted);
+    --line: var(--color-performance-line);
+    --brand: var(--color-performance-brand);
+    --brand-soft: var(--color-performance-brand-soft);
+    --on-brand: var(--color-performance-on-brand);
   }
 
   body {
-    @apply bg-page text-ink antialiased;
+    @apply flex min-h-screen flex-col bg-page text-ink antialiased;
   }
 
   ::selection {
@@ -75,7 +96,7 @@
   }
 
   .nav-link-active {
-    @apply bg-brand-soft text-ink;
+    @apply bg-brand-soft text-brand;
   }
 
   .site-footer {
@@ -88,7 +109,7 @@
 
   /* Page building blocks */
   .page-wrap {
-    @apply mx-auto max-w-6xl px-4 py-8 md:py-10;
+    @apply mx-auto w-full max-w-6xl flex-1 px-4 py-8 md:py-10;
   }
 
   .hero {
@@ -96,7 +117,7 @@
   }
 
   .eyebrow {
-    @apply text-xs font-bold uppercase tracking-widest text-muted;
+    @apply text-xs font-bold uppercase tracking-widest text-brand;
   }
 
   .section-title {
@@ -170,7 +191,7 @@
   }
 
   .card-price {
-    @apply mt-2 text-2xl font-bold;
+    @apply mt-2 text-2xl font-bold text-brand;
   }
 
   .card-specs {
@@ -261,6 +282,6 @@
   }
 
   .best-value {
-    @apply bg-brand-soft font-bold;
+    @apply bg-brand-soft font-bold text-brand;
   }
 }

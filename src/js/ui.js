@@ -1,50 +1,68 @@
-// Shared helpers used by every page.
+import {
+  getFavorites,
+  getTheme,
+  isFavorite,
+  saveTheme,
+  toggleFavorite
+} from "./storage.js";
 
-function formatPrice(price) {
-  return "$" + price.toLocaleString("en-US");
-}
+export const formatPrice = (price) => "$" + price.toLocaleString("en-US");
 
-function startPage() {
+export const showSkeletons = (container, count = 3) => {
+  const card = `
+    <div class="laptop-card pointer-events-none animate-pulse" aria-hidden="true">
+      <div class="h-44 w-full bg-page"></div>
+      <div class="card-body">
+        <div class="h-3 w-20 rounded bg-page"></div>
+        <div class="mt-3 h-6 w-3/4 rounded bg-page"></div>
+        <div class="mt-2 h-8 w-28 rounded bg-page"></div>
+        <div class="mt-4 grid grid-cols-2 gap-2 border-t border-line pt-4">
+          <div class="h-12 rounded-lg bg-page"></div>
+          <div class="h-12 rounded-lg bg-page"></div>
+          <div class="h-12 rounded-lg bg-page"></div>
+          <div class="h-12 rounded-lg bg-page"></div>
+        </div>
+        <div class="mt-4 h-10 rounded-lg bg-page"></div>
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = Array.from({ length: count }, () => card).join("");
+};
+
+export function startPage() {
   applyTheme();
   setupThemeButton();
   setupNavToggle();
   updateFavoriteCount();
 }
 
-function applyTheme() {
+export function applyTheme() {
   const theme = getTheme();
   const button = document.getElementById("themeButton");
 
   document.documentElement.setAttribute("data-theme", theme);
 
   if (button !== null) {
-    if (theme === "performance") {
-      button.textContent = "Battery saver";
-    } else {
-      button.textContent = "Performance";
-    }
+    button.textContent = theme === "performance" ? "Battery saver" : "Performance";
   }
 }
 
-function setupThemeButton() {
+export function setupThemeButton() {
   const button = document.getElementById("themeButton");
 
   if (button === null) {
     return;
   }
 
-  button.addEventListener("click", function () {
-    if (getTheme() === "performance") {
-      saveTheme("battery");
-    } else {
-      saveTheme("performance");
-    }
-
+  button.addEventListener("click", () => {
+    const next = getTheme() === "performance" ? "battery" : "performance";
+    saveTheme(next);
     applyTheme();
   });
 }
 
-function setupNavToggle() {
+export function setupNavToggle() {
   const button = document.getElementById("navToggle");
   const nav = document.getElementById("mainNav");
 
@@ -52,7 +70,7 @@ function setupNavToggle() {
     return;
   }
 
-  button.addEventListener("click", function () {
+  button.addEventListener("click", () => {
     const isOpen = nav.classList.toggle("open");
 
     button.setAttribute("aria-expanded", isOpen);
@@ -60,7 +78,7 @@ function setupNavToggle() {
   });
 }
 
-function updateFavoriteCount() {
+export function updateFavoriteCount() {
   const counter = document.getElementById("favCount");
 
   if (counter !== null) {
@@ -68,9 +86,8 @@ function updateFavoriteCount() {
   }
 }
 
-function createCard(laptop) {
+export function createCard(laptop) {
   const saved = isFavorite(laptop.id);
-  const favoriteText = saved ? "Remove favorite" : "Add to favorite";
 
   return `
     <article class="laptop-card">
@@ -115,18 +132,18 @@ function createCard(laptop) {
             class="btn-action"
             data-favorite="${laptop.id}"
             aria-pressed="${saved}"
-          >${favoriteText}</button>
+          >${saved ? "Remove favorite" : "Add to favorite"}</button>
         </div>
       </div>
     </article>
   `;
 }
 
-function setupFavoriteButtons(container, onChange) {
+export function setupFavoriteButtons(container, onChange) {
   const buttons = container.querySelectorAll("[data-favorite]");
 
-  buttons.forEach(function (button) {
-    button.addEventListener("click", function () {
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
       const id = Number(button.dataset.favorite);
       const favorites = toggleFavorite(id);
       const saved = favorites.includes(id);
@@ -142,6 +159,6 @@ function setupFavoriteButtons(container, onChange) {
   });
 }
 
-function showMessage(container, text) {
+export function showMessage(container, text) {
   container.innerHTML = `<p class="message">${text}</p>`;
 }

@@ -1,21 +1,42 @@
+import { DATA_ERROR, loadLaptops } from "./api.js";
+import { compareRows, getBestValue } from "./compare.js";
+import { getCompare, getFavorites, toggleCompare } from "./storage.js";
+import { formatPrice, showMessage, startPage } from "./ui.js";
+
 startPage();
 
 const picker = document.getElementById("comparePicker");
 const message = document.getElementById("compareMessage");
 const tableBox = document.getElementById("compareTable");
-const allLaptops = loadLaptops();
 
-renderPage();
+let allLaptops = [];
+
+async function init() {
+  showCompareSkeleton();
+
+  try {
+    allLaptops = await loadLaptops();
+    renderPage();
+  } catch (error) {
+    showMessage(tableBox, DATA_ERROR);
+  }
+}
+
+function showCompareSkeleton() {
+  tableBox.innerHTML = `
+    <div class="panel animate-pulse" aria-hidden="true">
+      <div class="h-8 w-1/3 rounded bg-page"></div>
+      <div class="mt-4 h-10 rounded bg-page"></div>
+      <div class="mt-2 h-10 rounded bg-page"></div>
+      <div class="mt-2 h-10 rounded bg-page"></div>
+    </div>
+  `;
+}
 
 function renderPage() {
   const favorites = getFavorites();
-  const saved = allLaptops.filter(function (laptop) {
-    return favorites.includes(laptop.id);
-  });
-
-  const compareIds = getCompare().filter(function (id) {
-    return favorites.includes(id);
-  });
+  const saved = allLaptops.filter((laptop) => favorites.includes(laptop.id));
+  const compareIds = getCompare().filter((id) => favorites.includes(id));
 
   if (saved.length === 0) {
     picker.innerHTML = "";
@@ -28,33 +49,19 @@ function renderPage() {
     <p class="section-text">Only your favorites can be compared.</p>
 
     <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      ${saved.map(function (laptop) {
-        return createCheckbox(laptop, compareIds);
-      }).join("")}
+      ${saved.map((laptop) => createCheckbox(laptop, compareIds)).join("")}
     </div>
   `;
 
-  const boxes = picker.querySelectorAll("input[type=checkbox]");
-
-  boxes.forEach(function (box) {
-    box.addEventListener("change", function () {
+  picker.querySelectorAll("input[type=checkbox]").forEach((box) => {
+    box.addEventListener("change", () => {
       const result = toggleCompare(Number(box.value));
-
-      if (result.message !== "") {
-        box.checked = false;
-        message.textContent = result.message;
-      } else {
-        message.textContent = "";
-      }
-
+      message.textContent = result.message;
       renderPage();
     });
   });
 
-  const chosen = saved.filter(function (laptop) {
-    return compareIds.includes(laptop.id);
-  });
-
+  const chosen = saved.filter((laptop) => compareIds.includes(laptop.id));
   showTable(chosen);
 }
 
@@ -78,27 +85,30 @@ function showTable(chosen) {
 
   const header =
     '<th scope="col">Specification</th>' +
-    chosen.map(function (laptop) {
-      return `<th scope="col">${laptop.name}</th>`;
-    }).join("");
+    chosen
+      .map((laptop) => `<th scope="col">${laptop.name}</th>`)
+      .join("");
 
-  const rows = compareRows.map(function (row) {
-    const best = getBestValue(chosen, row);
+  const rows = compareRows
+    .map((row) => {
+      const best = getBestValue(chosen, row);
 
-    const cells = chosen.map(function (laptop) {
-      const value = row.getValue(laptop);
-      const isBest = best !== null && value === best;
+      const cells = chosen
+        .map((laptop) => {
+          const isBest = best !== null && row.getValue(laptop) === best;
 
-      return `<td class="${isBest ? "best-value" : ""}">${row.getText(laptop)}</td>`;
-    }).join("");
+          return `<td class="${isBest ? "best-value" : ""}">${row.getText(laptop)}</td>`;
+        })
+        .join("");
 
-    return `
-      <tr>
-        <th scope="row">${row.label}</th>
-        ${cells}
-      </tr>
-    `;
-  }).join("");
+      return `
+        <tr>
+          <th scope="row">${row.label}</th>
+          ${cells}
+        </tr>
+      `;
+    })
+    .join("");
 
   tableBox.innerHTML = `
     <div class="overflow-x-auto rounded-xl border border-line bg-panel">
@@ -111,3 +121,5 @@ function showTable(chosen) {
     </div>
   `;
 }
+
+init();

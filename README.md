@@ -3,8 +3,10 @@
 A responsive five-page web app that helps students browse laptops, search and filter them,
 read the full specifications of one laptop, save favorites, and compare favorites side by side.
 
-The app opens directly from `index.html`. No local server is needed: the laptop list is stored
-in `data/laptops.js` and every script is a classic script.
+The laptop data is loaded from `data/laptops.json` with `fetch()`, so the app must run from a
+local server. The scripts are ES modules and the styling uses Tailwind CSS 4.
+
+GitHub repository: <https://github.com/r4g4b/UI_Assignment2>
 
 ## Pages
 
@@ -16,51 +18,58 @@ in `data/laptops.js` and every script is a classic script.
 | `favorites.html` | Saved laptops with total and average price |
 | `compare.html` | Side-by-side comparison of two to four favorites |
 
-## Open the app
-
-Double-click `index.html`, or open it in a browser:
-
-```bash
-open index.html
-```
-
-No install or build step is needed to use the app. The compiled stylesheet is already in
-`dist/output.css`.
-
-## Change the styles
-
-The styles use Tailwind CSS 4. If you change `src/input.css` or the class names in the HTML,
-rebuild the stylesheet:
+## Install
 
 ```bash
 npm install
+```
+
+This installs Tailwind CSS 4, the Tailwind CLI and the official forms plugin locally into
+`node_modules`. `node_modules` is not included in the submission because it can be recreated
+from `package.json` and `package-lock.json`.
+
+## Build the stylesheet
+
+```bash
 npm run build
 ```
 
-To rebuild on every change while working:
+To rebuild automatically while editing:
 
 ```bash
 npm run dev
 ```
 
+## Run the app
+
+Start a local server in this folder:
+
+```bash
+npm start
+```
+
+Then open <http://localhost:8000>. Any local server works, such as the VS Code Live Server
+extension.
+
+`fetch()` and ES modules do not work when the pages are opened directly with `file://`.
+
 ## Laptop data
 
-- `data/laptops.json` is the readable copy of the laptop data.
-- `data/laptops.js` is the same data wrapped in `window.LAPTOPS = [...]` so it can load from
-  `file://`.
-
-If you edit the JSON file, copy the same list into `data/laptops.js` so the pages show the
-change.
+- `data/laptops.json` holds 22 laptops.
+- Every laptop has: `id`, `name`, `brand`, `price`, `category`, `cpu`, `ramGB`, `storageGB`,
+  `batteryHours`, `weightKg`, `screenInches`, `image` and `description`.
+- Valid categories are `ultrabook`, `gaming`, `2-in-1`, `creator` and `budget`.
 
 ## Themes
 
-The header has a theme switch on every page:
+The header has a theme switch on every page.
 
-- **Battery saver** - light gray page, white cards, black text and buttons.
-- **Performance** - black page, dark gray cards, white text and buttons.
+- **Battery Saver Mode** uses a light background with green accents.
+- **Performance Mode** uses a dark background with an orange accent.
 
-Only black, white and gray tones are used. The choice is saved in `localStorage` and restored
-on every page.
+The selected theme is saved in `localStorage` and restored on every page. The small
+`theme-init.js` script runs before the page is painted so the saved theme appears without a
+flash of the other theme.
 
 ## Folder structure
 
@@ -85,9 +94,9 @@ laptop_finder_ahmed/
 │       ├── favorites.js
 │       └── comparePage.js
 ├── data/
-│   ├── laptops.json
-│   └── laptops.js
+│   └── laptops.json
 ├── dist/output.css
 ├── assets/
 ├── package.json
 └── README.md
+```
