@@ -1,4 +1,4 @@
-const DATA_URL = "data/laptops.json";
+const DATA_URL = "data/laptops.json"
 
 export const DATA_ERROR =
   "Could not load the laptop data. Run the site from a local server and reload.";

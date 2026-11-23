@@ -6,8 +6,7 @@ import {
   toggleFavorite
 } from "./storage.js";
 
-export const formatPrice = (price) => "$" + price.toLocaleString("en-US");
-
+export const formatPrice = (price) => price.toLocaleString("ar-EG") + " ج.م";
 export const showSkeletons = (container, count = 3) => {
   const card = `
     <div class="laptop-card pointer-events-none animate-pulse" aria-hidden="true">
