@@ -91,8 +91,3 @@ laptop_finder_ahmed/
 ├── assets/
 ├── package.json
 └── README.md
-```
-
-## GitHub
-
-Repository link: add your repository URL here before submitting.
